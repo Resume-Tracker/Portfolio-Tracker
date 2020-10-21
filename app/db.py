@@ -11,7 +11,7 @@ class Pageloads(Base):
     id = Column(Integer, primary_key=True)
     timestamp = Column(String(50), nullable=False)
     page_name = Column(String(50), nullable=False)
-    company = Column(String(50))
+    company = Column(String(50), nullable=True)
 
 
 Base.metadata.create_all(engine)
