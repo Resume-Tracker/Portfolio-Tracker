@@ -1,8 +1,17 @@
 from sqlalchemy import create_engine, MetaData, Table, Column, Integer, String, DateTime
-# TODO: Add path to table
-engine = create_engine('sqlite://<path_to_DB>', echo = True)
-meta = MetaData()
+from sqlalchemy.ext.declarative import declarative_base
 
-# TODO: Add tables here in PT-5
+# TODO: decide proper place for db
+engine = create_engine('sqlite:///database.db', echo=True)
+Base = declarative_base()
 
-meta.create_all(engine)
+
+class Pageloads(Base):
+    __tablename__ = 'pageloads'
+    id = Column(Integer, primary_key=True)
+    timestamp = Column(DateTime, nullable=False)
+    page_name = Column(String(50), nullable=False)
+    company = Column(String(50), nullable=True)
+
+
+Base.metadata.create_all(engine)
