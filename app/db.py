@@ -9,7 +9,7 @@ Base = declarative_base()
 class Pageloads(Base):
     __tablename__ = 'pageloads'
     id = Column(Integer, primary_key=True)
-    timestamp = Column(String(50), nullable=False)
+    timestamp = Column(DateTime, nullable=False)
     page_name = Column(String(50), nullable=False)
     company = Column(String(50), nullable=True)
 
