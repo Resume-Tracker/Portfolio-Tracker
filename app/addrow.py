@@ -3,35 +3,29 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime
 import sys
 
-def insert(date, page, company):
+from flask import Flask, request, redirect
+app = Flask(__name__)
+
+# TODO: Input company name
+@app.route('/', methods=['POST', 'GET', 'HEAD'])
+def insert():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    entry = Pageloads(timestamp = date, page_name = page, company = company)
+    # not too how to test if this works
+    page = request.referrer
+    entry = Pageloads(timestamp = datetime.today(), page_name = page)
     session.add(entry)
 
     try:
         session.commit()
-    except:
+    except Exception as e:
         session.rollback()
-        raise
+        print(e)
     finally:
         session.close()
 
-# run from command line, ie "python addrow.py 'page3' 'Google'"
+    return '', 204
+
 if __name__ == '__main__':
-    page_name = None
-    company = None
-    try:
-        page_name = sys.argv[1]
-    except:
-        print('[!] No page given')
-    try:
-        company = sys.argv[2]
-    except:
-        print('[!] No company given')
-
-    # maybe grab date from page information instead?
-    date = str(datetime.today().strftime('%Y-%m-%d-%H:%M:%S'))
-
-    insert(date, page_name, company)
+    app.run(debug=True)
