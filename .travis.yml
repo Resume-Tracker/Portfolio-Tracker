@@ -8,4 +8,4 @@ install:
   - pip install -r app/requirements.txt
 script:
   - cd app
-  - python db.py # The check if the databse models are valid python
+  - python db.py # Check if the database models are valid python
