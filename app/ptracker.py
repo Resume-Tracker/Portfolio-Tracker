@@ -1,9 +1,36 @@
-from flask import Flask
+from flask import Flask, request
 app = Flask(__name__)
 
-# TODO: only import `engine` and 1 table
-from db import *
+from db import engine, Pageloads
+from sqlalchemy.orm import sessionmaker
+from datetime import datetime
 
 # Add URL handling functions here
 # API handlers should probably go under /api/
 # tracking shout probably go under something else
+
+# TODO: Input company name
+@app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
+def insert():
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    page = 'NOT_DEFINED'
+    if request.referrer:
+        page = request.referrer
+
+    entry = Pageloads(timestamp = datetime.utcnow(), page_name = page)
+    session.add(entry)
+
+    try:
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(e)
+    finally:
+        session.close()
+
+    return '', 204
+
+if __name__ == '__main__':
+    app.run(debug=True)
