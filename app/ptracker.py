@@ -17,7 +17,7 @@ def insert():
 
     # not too how to test if this works
     page = request.referrer
-    entry = Pageloads(timestamp = datetime.today(), page_name = page)
+    entry = Pageloads(timestamp = datetime.utcnow(), page_name = page)
     session.add(entry)
 
     try:
