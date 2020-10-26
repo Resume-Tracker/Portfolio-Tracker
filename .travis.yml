@@ -1,0 +1,11 @@
+language: python
+python:
+  - "3.6"
+  - "3.7"
+  - "3.8"
+  - "3.9"
+install:
+  - pip install -r app/requirements.txt
+script:
+  - cd app
+  - python db.py # The check if the databse models are valid python
