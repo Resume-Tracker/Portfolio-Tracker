@@ -15,8 +15,10 @@ def insert():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    # not too how to test if this works
-    page = request.referrer
+    page = 'NOT_DEFINED'
+    if request.referrer:
+        page = request.referrer
+
     entry = Pageloads(timestamp = datetime.utcnow(), page_name = page)
     session.add(entry)
 
