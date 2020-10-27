@@ -1,0 +1,105 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+    
+    <!-- Load plotly.js into the DOM -->
+	<script src='https://cdn.plot.ly/plotly-latest.min.js'></script>
+
+    <title>Portfolio Tracker</title>
+    
+    <style>
+      
+      h1 {
+        text-align: center;
+      }
+
+      #p1 {
+        padding: 10px;
+      }
+      
+      #input {
+        display: table;
+        margin-left: auto;
+        margin-right: auto;
+      }
+      .input-mysize {
+        width: 500px;
+      }
+      
+    </style>
+    
+  </head>
+  <body>
+    <h1>Portfolio Tracker</h1>
+    
+    <!-- bootstrap container -->
+    <div id="container">
+      <div id="input" class="text-center">
+        <form>
+          <div class="form-group">
+            <label for="portfolioLinkInput">Portfolio Link</label>
+            <input type="text" class="form-control input-mysize" id="portfolioLinkInput" placeholder="Paste your link here">
+          </div>
+          <button type="button" class="btn btn-primary" id="portfolioLinkSubmit">Submit</button>
+        </form>
+      </div>
+      <br>
+      <div id="result">
+        <!-- Plotly chart will be drawn inside this DIV -->
+        <div id="plotlyChart"></div>
+        <p id="p1"></p>
+      </div>
+    
+    </div>
+    
+    <script>
+      
+      $('#portfolioLinkSubmit').on('click', function (e) {
+        // fill array with random numbers
+        var yVal = [];
+        var yMin = 1;
+        var yMax = 10;
+        for (var i = 0; i < 4; i++) {
+          yVal.push(Math.floor(Math.random() * (yMax - yMin + 1) ) + yMin);
+        }
+        
+        var data = [
+          {
+            x: ['2020-10-04', '2020-10-05', '2020-10-06', '2020-10-07'],
+            y: yVal,
+            type: 'scatter'
+          }
+        ];
+
+        var layout = {
+          title: 'Page Views per Day',
+        };
+
+        var config = {
+          responsive: true
+        };
+
+        Plotly.newPlot('plotlyChart', data, layout, config);
+
+        // change total views value
+        var val = 4;
+        $('#p1').html(`Total Views to date: ${val}`);
+
+      })
+
+    </script>
+    
+  </body>
+</html>
