@@ -3,7 +3,7 @@ app = Flask(__name__)
 
 from db import engine, Pageloads
 from sqlalchemy.orm import sessionmaker
-from datetime import datetime, timedeltaz
+from datetime import datetime, timedelta
 
 from pixel import PIXEL
 
@@ -28,7 +28,7 @@ def insert():
     finally:
         session.close()
 
-    return(PIXEL , mimetype='application/png')
+    return Response(PIXEL, mimetype='image/png')
 
 
 # query db and return list of pageloads
