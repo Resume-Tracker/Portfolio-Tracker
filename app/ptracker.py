@@ -3,11 +3,9 @@ app = Flask(__name__)
 
 from db import engine, Pageloads
 from sqlalchemy.orm import sessionmaker
-from datetime import datetime, timedelta
+from datetime import datetime, timedeltaz
 
-# Add URL handling functions here
-# API handlers should probably go under /api/
-# tracking shout probably go under something else
+from pixel import PIXEL
 
 # TODO: Input company name
 @app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
@@ -30,7 +28,7 @@ def insert():
     finally:
         session.close()
 
-    return '', 204
+    return(PIXEL , mimetype='application/png')
 
 
 # query db and return list of pageloads
