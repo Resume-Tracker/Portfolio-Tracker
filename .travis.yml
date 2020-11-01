@@ -9,3 +9,4 @@ install:
 script:
   - cd app
   - python db.py # Check if the database models are valid python
+  - pytest
