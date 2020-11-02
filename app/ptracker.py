@@ -4,6 +4,7 @@ app = Flask(__name__)
 from db import engine, Pageloads
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
+from sqlalchemy import func
 
 from pixel import PIXEL
 
@@ -73,6 +74,29 @@ def get_pageloads_with_date():
         pageload_object['page_name'] = record.page_name
         pageload_object['company'] = record.company
         response_body.append(pageload_object)
+
+    session.close()
+    return jsonify(response_body)
+
+
+@app.route('/pageloads_per_company')
+def get_pageloads_per_company():
+    """ returns a json file containing:
+         {
+         ( 'company', # of hits), ...
+         }
+    """
+
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    record = session.query(func.count(Pageloads.page_name), Pageloads.page_name).group_by(Pageloads.page_name).all()
+
+    response_body = {}
+
+    for r in record:
+        #     company name  = count
+        response_body[r[1]] = r[0]
 
     session.close()
     return jsonify(response_body)
