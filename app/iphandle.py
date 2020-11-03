@@ -11,3 +11,23 @@ def getDomain(request):
         domain = None
 
     return domain
+
+
+def filterDomains(domain):
+    """ checks if any lines in ignore_list.txt are present in domain string input.
+        if so, function returns None. otherwise function returns unmodified domain.
+
+        function assumes 'ignore_list.txt' is located in same directory
+    """
+
+    if not domain:
+        return None
+
+    # may need to change path
+    with open('./resources/ignore_list.txt') as r:
+        for line in r:
+            # do not character match newline
+            if line.rstrip() in domain:
+                return None
+
+    return domain
