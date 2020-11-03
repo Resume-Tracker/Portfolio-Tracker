@@ -20,8 +20,11 @@ def filterDomains(domain):
         function assumes 'ignore_list.txt' is located in same directory
     """
 
+    if not domain:
+        return None
+
     # may need to change path
-    with open('./app/ignore_list.txt') as r:
+    with open('./resources/ignore_list.txt') as r:
         for line in r:
             # do not character match newline
             if line.rstrip() in domain:
