@@ -41,13 +41,12 @@ def parseDomains(domain):
         Returns simplified domain as string. 
         If domain is none, returns none
     """
-    if not domain:
-        return None
+    if domain is not None:
+        extract = tldextract.extract(domain).registered_domain
+        if not extract:
+            return None
 
-    extract = tldextract.extract(domain).registered_domain
-    if not extract:
-        return None
+        return extract
 
-    return extract
-     
+    return None
     
