@@ -31,3 +31,10 @@ def filterDomains(domain):
                 return None
 
     return domain
+
+
+def parseDomains(domain):
+    # use urlparse? or tldextract?
+    if not domain:
+        return None
+    
