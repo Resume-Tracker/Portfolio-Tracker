@@ -1,5 +1,6 @@
 from flask import request
 import socket
+import tldextract
 
 # takes in request object and returns domain as a string
 def getDomain(request):
@@ -34,7 +35,19 @@ def filterDomains(domain):
 
 
 def parseDomains(domain):
-    # use urlparse? or tldextract?
+    """ Needs tldextract installed
+        Add to requirements.txt?
+
+        Returns simplified domain as string. 
+        If domain is none, returns none
+    """
     if not domain:
         return None
+
+    extract = tldextract.extract(domain).registered_domain
+    if not extract:
+        return None
+
+    return extract
+     
     
