@@ -49,4 +49,23 @@ def parseDomains(domain):
         return extract
 
     return None
-    
+
+
+def get_company_from_ip(rqst):
+    """
+    tries to identify a company from the provided request address
+
+        Parameters:
+            rqst : a request object.
+
+        Returns:
+            company (str): the company that was identified from the ip address
+            None: if a company could not be associated with an ip address
+
+    """
+
+    domain = getDomain(rqst)
+    domain = filterDomains(domain)
+    company = parseDomains(domain)
+
+    return company
