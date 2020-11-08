@@ -51,7 +51,7 @@ def parseDomains(domain):
     return None
 
 
-def get_company_from_ip(rqst):
+def get_company_from_request(rqst):
     """
     tries to identify a company from the provided request address
 

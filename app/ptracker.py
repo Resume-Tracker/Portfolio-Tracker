@@ -7,7 +7,7 @@ from datetime import datetime, timedelta
 from sqlalchemy import func
 
 from pixel import PIXEL
-from iphandle import get_company_from_ip
+from iphandle import get_company_from_request
 
 # TODO: Input company name
 @app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
@@ -19,7 +19,7 @@ def insert():
     if request.referrer:
         page = request.referrer
 
-    company = get_company_from_ip(request)
+    company = get_company_from_request(request)
     entry = Pageloads(timestamp=datetime.utcnow(), page_name=page, company=company)
     session.add(entry)
 
