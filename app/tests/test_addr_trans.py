@@ -45,6 +45,8 @@ def test_domain_simplify():
     assert iphandle.parseDomains('home.komatsu') == 'home.komatsu'
     # Encoded non-ASCII ccTLD
     assert iphandle.parseDomains('xn--mgbaa2be1idb4afr.xn--lgbbat1ad8j') == 'xn--mgbaa2be1idb4afr.xn--lgbbat1ad8j'
+    # Test ccTLD+2s
+    assert iphandle.parseDomains('www.bbc.co.uk') == 'bbc.co.uk'
 
 def test_get_domain():
     """ Test that an IP properly gets converted to a domain if a domain is available
