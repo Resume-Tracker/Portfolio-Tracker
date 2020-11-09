@@ -50,7 +50,26 @@ def test_addrow_db(app, client):
     # In this case `one()` acts as an assertion
     # The one call can only return one entry or an error
     # It cannot return 0 or 2
-    session.query(Pageloads).filter(Pageloads.timestamp.between(start, stop)).one()
+    session.query(Pageloads).filter(
+            Pageloads.timestamp.between(start, stop)
+        ).one()
+
+def test_addrow_org_db(app, client):
+    """Test that addrow adds a DB row with the correct organization"""
+    # This is the wrong way to invoke SQL alchemy
+    # TODO: move sessionmaker into db.py
+    session = sessionmaker(bind=engine)()
+    start = datetime.utcnow()
+    res = client.get('/addrow', headers={'X-Real-IP':'128.114.119.88'})
+    stop = datetime.utcnow()
+    # If the return code is not 200 something else may be wrong
+    assert res.status_code == 200
+    # In this case `one()` acts as an assertion
+    # The one call can only return one entry or an error
+    # It cannot return 0 or 2
+    assert session.query(Pageloads).filter(
+            Pageloads.timestamp.between(start, stop)
+        ).one().company == "ucsc.edu"
 
 def test_pageloads_json(app, client):
     """Test that pageloads returns JSON

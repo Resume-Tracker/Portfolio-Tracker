@@ -5,6 +5,30 @@ import iphandle
 
 import pytest
 
+import logging
+
+logger = logging.getLogger()
+
+class Request():
+    """ Basic mocking of the request object
+    """
+    def __init__(self, ip):
+        self.environ = Environ(ip)
+        self.remote_addr = ip
+
+class Environ():
+    """ Mocking of the request enviornment
+    """
+    def __init__(self, ip):
+        self._ip = ip
+    def get(self, var, alt):
+        # HTTP_X_FORWARED_FOR may also work.  But I don't know
+        if var == 'HTTP_X_REAL_IP':
+            return self._ip
+        else:
+            logger.warn(f'Header `{var}` not found falling back on passthrough')
+            return alt
+
 def test_domain_filter():
     """ Checks if the filter domains call can accept and reject domains
     """
@@ -21,3 +45,21 @@ def test_domain_simplify():
     assert iphandle.parseDomains('home.komatsu') == 'home.komatsu'
     # Encoded non-ASCII ccTLD
     assert iphandle.parseDomains('xn--mgbaa2be1idb4afr.xn--lgbbat1ad8j') == 'xn--mgbaa2be1idb4afr.xn--lgbbat1ad8j'
+
+def test_get_domain():
+    """ Test that an IP properly gets converted to a domain if a domain is available
+    """
+    req_ucsc = Request('128.114.119.88')
+    assert iphandle.getDomain(req_ucsc).endswith('ucsc.edu')
+    # test invalid address
+    req_invalid = Request('256.256.256.256')
+    assert iphandle.getDomain(req_invalid) is None
+
+def test_full_ip_to_domain():
+    """ Test full ip conversion pipeline
+    """
+    req_ucsc = Request('128.114.119.88')
+    assert iphandle.get_company_from_request(req_ucsc) == 'ucsc.edu'
+    # test invalid address
+    req_invalid = Request('256.256.256.256')
+    assert iphandle.get_company_from_request(req_invalid) is None
