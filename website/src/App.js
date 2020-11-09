@@ -1,5 +1,6 @@
 import React from 'react';
-import Pageloads from './components/pageloads';
+import PageloadsLineChart from './components/pageloads_line_chart';
+import PageloadsTable from './components/pageloads_table';
 
 // Bootstrap
 import Button from 'react-bootstrap/Button';
@@ -12,18 +13,32 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 class App extends React.Component {
   constructor(props) {
     super(props);
-    // state is a variable used by React to store the state of React components
+    // state is a variable used by React to store the state of
+    // React components
     this.state = {
-      pageloads: []
+      pageloads: [],
+      pageloadsPerCompany: []
     }
   }
 
-  // fetches data from the pageloads endpoint
+  // fetches data from the pageloads endpoint and update pageloads in
+  // the React state
   fetchPageloads = () => {
     fetch('/pageloads')
     .then(response => response.json())
     .then((data) => {
       this.setState({ pageloads: data })
+    })
+    .catch(console.log)
+  }
+
+  // fetches data from the pageloads_per_company endpoint and update
+  // pageloadsPerCompany in the React state
+  fetchPageloadsPerCompany = () => {
+    fetch('/pageloads_per_company')
+    .then(response => response.json())
+    .then((data) => {
+      this.setState({ pageloadsPerCompany: data })
     })
     .catch(console.log)
   }
@@ -36,6 +51,7 @@ class App extends React.Component {
   handleSubmit = (event) => {
     event.preventDefault();
     this.fetchPageloads();
+    this.fetchPageloadsPerCompany();
   }
 
   render() {
@@ -48,7 +64,8 @@ class App extends React.Component {
               <Form className="text-center" onSubmit={this.handleSubmit}>
                 <Form.Group controlId="formLink">
                   <Form.Label>Portfolio Link</Form.Label>
-                  <Form.Control type="text" placeholder="Paste your link here" />
+                  <Form.Control type="text"
+                    placeholder="Paste your link here" />
                 </Form.Group>
 
                 <Button variant="primary" type="submit">
@@ -57,9 +74,11 @@ class App extends React.Component {
               </Form>
             </Col>
           </Row>
+          <br />
+          <PageloadsLineChart pageloads={this.state.pageloads}/>
+          <br />
+          <PageloadsTable pageloadsPerCompany={this.state.pageloadsPerCompany}/>
         </Container>
-        <br />
-        <Pageloads pageloads={this.state.pageloads}/>
       </>
     );
   }

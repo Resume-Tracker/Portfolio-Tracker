@@ -1,7 +1,7 @@
 import React from 'react'
 import Plot from 'react-plotly.js';
 
-const Pageloads = ({ pageloads }) => {
+const PageloadsLineChart = ({ pageloads }) => {
   // convert timestamps into ISO format for plotly
   let timestamps = pageloads.map(d => (new Date(d.timestamp)).toISOString().slice(0,10))
 
@@ -18,7 +18,7 @@ const Pageloads = ({ pageloads }) => {
   // only render the line chart if there are data
   if (lineChartX.length && lineChartY.length) {
     return (
-      <div id="pageloads">
+      <div id="pageloadsLineChart">
         <Plot
           data = {[
             {
@@ -41,10 +41,10 @@ const Pageloads = ({ pageloads }) => {
     );
   } else {
     return (
-      <div id="pageloads">
+      <div id="pageloadsLineChart">
       </div>
     );
   }
 };
 
-export default Pageloads
+export default PageloadsLineChart
