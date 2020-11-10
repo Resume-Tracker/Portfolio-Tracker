@@ -1,5 +1,5 @@
 ## Note
-You'll need to install react before using any of this code. Also the graph for visits will also not show up if there are no entries on the database file.
+You'll need to install react before using any of this code. Also the graph for visits will not render if there are no entries on the database file.
 
 ## How to install react
 Run this command
