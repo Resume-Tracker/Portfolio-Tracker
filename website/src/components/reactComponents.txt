@@ -1,0 +1,3 @@
+npm install react-datepicker
+npm install react-bootstrap bootstrap
+npm install recharts

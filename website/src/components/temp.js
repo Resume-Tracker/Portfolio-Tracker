@@ -1,16 +1,14 @@
 import React, { useState, useEffect } from "react";
 import DatePicker from "react-datepicker"; 
 import Pageloads from "./components/pageloads";
+import logo from './logo.svg';
 import "react-datepicker/dist/react-datepicker.css";
 import './App.css';
 
 
 function App() {
+  const [startDate, setStartDate] = useState(new Date("2020/10/01"));
   const [endDate, setEndDate] = useState(new Date());
-  const [startDate, setStartDate] = useState(new Date(endDate.getTime() - (10*24*60*60*1000)));
-  endDate.setHours(23, 59, 59, 999);
-  startDate.setHours(0, 0, 0, 0);
-  
   const [visits, setVisits] = useState([]);
   
   let [, startDay, , startYear, startTime] = startDate.toUTCString().split(" ");
@@ -31,16 +29,14 @@ function App() {
       }))
   }, [startDateEncoded, endDateEncoded]);
 
-  console.log("start date: " + startDate.toString());
-  console.log("end date: " + endDate.toString());
+  console.log("start date: " + startDate);
+  console.log("end date: " + endDate);
   console.log(visits);
 
   return (
     <div className="App">
       <header className="App-header">
-        <h1>Portfolio Tracker</h1>
-      </header>
-      <body className="App-body">
+        <img src={logo} className="App-logo" alt="logo" />
         <DatePicker
           selected={startDate}
           onChange={date => setStartDate(date)}
@@ -57,8 +53,8 @@ function App() {
           minDate={startDate}
         />
         <Pageloads pageloads={visits} />
-      </body>
-      {/* <p>
+      </header>
+      <p>
         { startDate.toUTCString() } <br/>
         { startDateString } <br/>
         { startDateEncoded }
@@ -68,7 +64,7 @@ function App() {
         { endDate.toUTCString() } <br/>
         { endDateString } <br/>
         { endDateEncoded }
-      </p> */}
+      </p>
     </div>
   );
 }
