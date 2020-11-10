@@ -1,5 +1,6 @@
 from flask import request
 import socket
+import tldextract
 
 # takes in request object and returns domain as a string
 def getDomain(request):
@@ -31,3 +32,40 @@ def filterDomains(domain):
                 return None
 
     return domain
+
+
+def parseDomains(domain):
+    """ Needs tldextract installed
+        Add to requirements.txt?
+
+        Returns simplified domain as string. 
+        If domain is none, returns none
+    """
+    if domain is not None:
+        extract = tldextract.extract(domain).registered_domain
+        if not extract:
+            return None
+
+        return extract
+
+    return None
+
+
+def get_company_from_request(rqst):
+    """
+    tries to identify a company from the provided request address
+
+        Parameters:
+            rqst : a request object.
+
+        Returns:
+            company (str): the company that was identified from the ip address
+            None: if a company could not be associated with an ip address
+
+    """
+
+    domain = getDomain(rqst)
+    domain = filterDomains(domain)
+    company = parseDomains(domain)
+
+    return company
