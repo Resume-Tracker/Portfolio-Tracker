@@ -14,6 +14,7 @@ cd my-app
 npm start
 ```
 
+## Installing External Components
 While still inside the 'my-app; directory, run the following commands to get external components necessary for rendering the calendar and graph. 
 ```bash
 npm install react-datepicker
