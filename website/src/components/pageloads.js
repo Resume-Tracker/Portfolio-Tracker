@@ -1,11 +1,14 @@
 import React from 'react';
-import {ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 export const Pageloads = ({ pageloads }) => {
-  // convert timestamps into ISO format for plotly
-  let timestamps = pageloads.map(d => (new Date(d.timestamp)).toISOString().slice(0,10))
+  // convert timestamps into local time format (mm/dd/yyyy) for the graph
+  let timestamps = pageloads.map(d => {
+    const date = new Date(d.timestamp);
+    return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
+  })
 
-  // count the number of occurences of each timestamp
+  // count the number of occurences for each timestamp
   let occurrences = {};
   for (var i = 0; i < timestamps.length; i++) {
     occurrences[timestamps[i]] = (occurrences[timestamps[i]] || 0) + 1;
@@ -34,21 +37,22 @@ export const Pageloads = ({ pageloads }) => {
   else {
     return (
       <div id="pageloads">
-        <ComposedChart
-          width={1500}
-          height={400}
-          data={data}
-          margin={{
-            top: 20, right: 20, bottom: 20, left: 20,
-          }}
-        >
+        <ResponsiveContainer width="100%" height={400}>
+          <ComposedChart
+            data={data}
+            margin={{
+              top: 20, right: 20, bottom: 20, left: 20,
+            }}
+          >
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="date" allowDuplicatedCategory={false}/>
           <YAxis />
           <Tooltip />
+          <Legend />
           <Bar dataKey="visits" barSize={10} fill="#413ea0" />
-          <Line type="monotone" dataKey="visits" stroke="#ff7300" legendType="false"/>
-        </ComposedChart>
+          <Line type="monotone" dataKey="visits" stroke="#ff7300" legendType="none"/>
+          </ComposedChart>
+        </ResponsiveContainer>
       </div>
     );
   }
