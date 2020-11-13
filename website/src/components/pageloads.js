@@ -5,7 +5,7 @@ export const Pageloads = ({ pageloads }) => {
   // convert timestamps into local time format (mm/dd/yyyy) for the graph
   let timestamps = pageloads.map(d => {
     const date = new Date(d.timestamp);
-    return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+    return `${date.getMonth()+1}/${date.getDate()}/${date.getFullYear()}`;
   })
 
   // count the number of occurences for each timestamp
