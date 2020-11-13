@@ -2,10 +2,13 @@ import React from 'react';
 import {ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 export const Pageloads = ({ pageloads }) => {
-  // convert timestamps into ISO format for plotly
-  let timestamps = pageloads.map(d => (new Date(d.timestamp)).toISOString().slice(0,10))
+  // convert timestamps into local time format (mm/dd/yyyy) for the graph
+  let timestamps = pageloads.map(d => {
+    const date = new Date(d.timestamp);
+    return `${date.getMonth()}/${date.getDate()}/${date.getFullYear()}`;
+  })
 
-  // count the number of occurences of each timestamp
+  // count the number of occurences for each timestamp
   let occurrences = {};
   for (var i = 0; i < timestamps.length; i++) {
     occurrences[timestamps[i]] = (occurrences[timestamps[i]] || 0) + 1;
