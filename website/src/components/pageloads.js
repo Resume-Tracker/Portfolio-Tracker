@@ -1,5 +1,5 @@
 import React from 'react';
-import {ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
+import {ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend} from 'recharts';
 
 export const Pageloads = ({ pageloads }) => {
   // convert timestamps into ISO format for plotly
@@ -34,14 +34,13 @@ export const Pageloads = ({ pageloads }) => {
   else {
     return (
       <div id="pageloads">
-        <ComposedChart
-          width={1500}
-          height={400}
-          data={data}
-          margin={{
-            top: 20, right: 20, bottom: 20, left: 20,
-          }}
-        >
+        <ResponsiveContainer width="100%" height={400}>
+          <ComposedChart
+            data={data}
+            margin={{
+              top: 20, right: 20, bottom: 20, left: 20,
+            }}
+          >
           <CartesianGrid stroke="#f5f5f5" />
           <XAxis dataKey="date" allowDuplicatedCategory={false}/>
           <YAxis />
@@ -49,7 +48,8 @@ export const Pageloads = ({ pageloads }) => {
           <Legend />
           <Bar dataKey="visits" barSize={10} fill="#413ea0" />
           <Line type="monotone" dataKey="visits" stroke="#ff7300" legendType="none"/>
-        </ComposedChart>
+          </ComposedChart>
+        </ResponsiveContainer>
       </div>
     );
   }

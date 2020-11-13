@@ -4,6 +4,7 @@ import "react-datepicker/dist/react-datepicker.css";
 import './App.css';
 
 // Bootstrap
+import Container from 'react-bootstrap/Container';
 import 'bootstrap/dist/css/bootstrap.min.css';
 
 // Components
@@ -54,23 +55,28 @@ function App() {
         <h1>Portfolio Tracker</h1>
       </div>
       <div className="App-body">
-        <DatePicker
-          selected={startDate}
-          onChange={date => setStartDate(date)}
-          selectsStart
-          startDate={startDate}
-          endDate={endDate}
-        />
-        <DatePicker
-          selected={endDate}
-          onChange={date => setEndDate(date)}
-          selectsEnd
-          startDate={startDate}
-          endDate={endDate}
-          minDate={startDate}
-        />
-        <Pageloads pageloads={visits} />
-        <PageloadsTable pageloadsPerCompany={visitsPerCompany} />
+        <Container>
+          <DatePicker
+            selected={startDate}
+            onChange={date => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+          />
+          <br />
+          <DatePicker
+            selected={endDate}
+            onChange={date => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+          />
+          <br />
+          <Pageloads pageloads={visits} />
+          <br />
+          <PageloadsTable pageloadsPerCompany={visitsPerCompany} />
+        </Container>
       </div>
       {/* <p>
         { startDate.toUTCString() } <br/>
