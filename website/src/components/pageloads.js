@@ -46,8 +46,9 @@ export const Pageloads = ({ pageloads }) => {
           <XAxis dataKey="date" allowDuplicatedCategory={false}/>
           <YAxis />
           <Tooltip />
+          <Legend />
           <Bar dataKey="visits" barSize={10} fill="#413ea0" />
-          <Line type="monotone" dataKey="visits" stroke="#ff7300" legendType="false"/>
+          <Line type="monotone" dataKey="visits" stroke="#ff7300" legendType="none"/>
         </ComposedChart>
       </div>
     );
