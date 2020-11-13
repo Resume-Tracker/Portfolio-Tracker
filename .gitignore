@@ -2,3 +2,4 @@
 venv/
 *.db
 log.txt
+website/node_modules
