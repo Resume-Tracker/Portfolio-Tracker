@@ -37,10 +37,10 @@ function App() {
 
   return (
     <div className="App">
-      <header className="App-header">
+      <div className="App-header">
         <h1>Portfolio Tracker</h1>
-      </header>
-      <body className="App-body">
+      </div>
+      <div className="App-body">
         <DatePicker
           selected={startDate}
           onChange={date => setStartDate(date)}
@@ -57,7 +57,7 @@ function App() {
           minDate={startDate}
         />
         <Pageloads pageloads={visits} />
-      </body>
+      </div>
       {/* <p>
         { startDate.toUTCString() } <br/>
         { startDateString } <br/>
