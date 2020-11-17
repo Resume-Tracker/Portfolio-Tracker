@@ -130,7 +130,8 @@ def get_pageloads_per_company():
                                                    Pageloads.company == None).all()
 
     if record[0][0] is not None:
-        response_body["None"] = record[0][0]
+        if record[0][0] != 0:
+            response_body["Unknown"] = record[0][0]
     else:
         raise Exception("Issue counting null values in db")
 
