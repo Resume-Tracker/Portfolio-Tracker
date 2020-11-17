@@ -1,18 +1,21 @@
 {
-  "name": "react-api",
+  "name": "my-app",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^5.11.5",
-    "@testing-library/react": "^11.1.0",
-    "@testing-library/user-event": "^12.1.10",
+    "@testing-library/react": "^11.1.1",
+    "@testing-library/user-event": "^12.2.0",
     "bootstrap": "^4.5.3",
-    "plotly.js": "^1.57.1",
+    "canvasjs": "^1.8.3",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
+    "react-datepicker": "^3.3.0",
     "react-dom": "^17.0.1",
-    "react-plotly.js": "^2.5.0",
     "react-scripts": "4.0.0",
+    "recharts": "^1.8.5",
+    "semantic-ui-css": "^2.4.1",
+    "semantic-ui-react": "^2.0.1",
     "web-vitals": "^0.2.4"
   },
   "scripts": {
@@ -27,6 +30,7 @@
       "react-app/jest"
     ]
   },
+  "proxy": "http://localhost:5000/",
   "browserslist": {
     "production": [
       ">0.2%",
@@ -38,6 +42,5 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
-  },
-  "proxy": "http://localhost:5000"
+  }
 }
