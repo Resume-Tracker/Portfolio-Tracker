@@ -9,6 +9,7 @@ from sqlalchemy import func
 from pixel import PIXEL
 from iphandle import get_company_from_request
 
+
 # TODO: Input company name
 @app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
 def insert():
@@ -92,13 +93,47 @@ def get_pageloads_per_company():
     Session = sessionmaker(bind=engine)
     session = Session()
 
-    record = session.query(func.count(Pageloads.page_name), Pageloads.page_name).group_by(Pageloads.page_name).all()
+    if 'start_date' and 'end_date' in request.args:
+
+        start_date = request.args.get('start_date')
+        end_date = request.args.get('end_date')
+
+        try:
+            start_date_datetime = datetime.strptime(start_date, '%Y-%m-%d %H:%M:%S')
+            end_date_datetime = datetime.strptime(end_date, '%Y-%m-%d %H:%M:%S')
+
+        except Exception as e:
+            return Response(status=400, response='Issue parsing timestamp arguments. Please double check formatting')
+        finally:
+            session.close()
+
+    # if datetime parameters are not present, default range is 10 days
+    else:
+        start_date_datetime = datetime.utcnow() - timedelta(days=10)
+        end_date_datetime = datetime.utcnow()
+
+    record = session.query(func.count(Pageloads.company), Pageloads.company).group_by(Pageloads.company).filter(
+        Pageloads.timestamp >= start_date_datetime,
+        Pageloads.timestamp <= end_date_datetime).all()
 
     response_body = {}
 
     for r in record:
         #     company name  = count
-        response_body[r[1]] = r[0]
+        print(r)
+        if r[1]:
+            response_body[r[1]] = r[0]
+
+    # first query does not count null values so a separate query is done
+    record = session.query(func.count("*")).filter(Pageloads.timestamp >= start_date_datetime,
+                                                   Pageloads.timestamp <= end_date_datetime,
+                                                   Pageloads.company == None).all()
+
+    if record[0][0] is not None:
+        if record[0][0] != 0:
+            response_body["Unknown"] = record[0][0]
+    else:
+        raise Exception("Issue counting null values in db")
 
     session.close()
     return jsonify(response_body)
