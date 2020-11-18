@@ -34,7 +34,7 @@ def insert():
     finally:
         session.close()
 
-    response = make_response(render_template('dummy_template.js', id=new_uuid)) # need a path for the js template
+    response = make_response(render_template('progress.js', id=new_uuid)) # need a path for the js template
     response.headers['Content-Type'] = 'text/javascript'
     return response
 
