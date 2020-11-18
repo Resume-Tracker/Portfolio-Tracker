@@ -4,7 +4,7 @@ var Progress = {
   url: "/read/{{ id }}",
   announce: function() {
     fetch(url)
-  }
+  },
   record: function() {
     let diff = document.documentElement.scrollHeight - document.documentElement.scrollTop
     if (diff === document.documentElement.clientHeight) {
