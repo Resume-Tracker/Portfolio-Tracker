@@ -3,9 +3,9 @@ import 'react-datepicker/dist/react-datepicker.css'
 import './App.css'
 
 // Components
-import Pageloads from './components/pageloads'
+import Pageloads from './components/pageloads_graph'
 import PageloadsTable from './components/pageloads_table'
-import DateRange from './components/DateRange'
+import DateRange from './components/date_range'
 
 function App () {
   const [endDate, setEndDate] = useState(new Date())
