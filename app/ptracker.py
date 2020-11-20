@@ -6,7 +6,6 @@ from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import uuid
-from sqlalchemy.orm.exc import NoResultFound
 
 from pixel import PIXEL
 from iphandle import get_company_from_request
