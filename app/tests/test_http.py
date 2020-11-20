@@ -25,17 +25,14 @@ def client(app):
     return app.test_client()
 
 
-def test_addrow_png(app, client):
+def test_addrow_js(app, client):
     """Test that addrow returns a PNG"""
     res = client.get('/addrow')
     # If the return code is not 200 something else may be wrong
     assert res.status_code == 200
     # Web browsers need to be told the content type
     # Check that we are providing it
-    assert res.headers['Content-Type'] == 'image/png'
-    # Check that the returned data has a valid PNG magic.
-    # Checking if the PNG parses is not really worthwile here
-    assert res.get_data().startswith(b'\x89PNG\r\n')
+    assert res.headers['Content-Type'] == 'text/javascript'
 
 def test_addrow_db(app, client):
     """Test that addrow adds a DB row"""
