@@ -143,7 +143,7 @@ def get_pageloads_per_company():
     return jsonify(response_body)
 
 
-@app.route("/read/<rule_id>", methods=["PUT"])
+@app.route("/read/<rule_id>", methods=["GET"])
 def reached_end_of_page(rule_id):
     Session = sessionmaker(bind=engine)
     session = Session()
