@@ -1,10 +1,11 @@
-from flask import Flask, request, jsonify, Response
+from flask import Flask, request, jsonify, Response, make_response, render_template
 app = Flask(__name__)
 
 from db import engine, Pageloads
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from sqlalchemy import func
+import uuid
 
 from pixel import PIXEL
 from iphandle import get_company_from_request
@@ -21,7 +22,8 @@ def insert():
         page = request.referrer
 
     company = get_company_from_request(request)
-    entry = Pageloads(timestamp=datetime.utcnow(), page_name=page, company=company)
+    new_uuid = uuid.uuid4().hex
+    entry = Pageloads(id=new_uuid, timestamp=datetime.utcnow(), page_name=page, company=company)
     session.add(entry)
 
     try:
@@ -32,7 +34,9 @@ def insert():
     finally:
         session.close()
 
-    return Response(PIXEL, mimetype='image/png')
+    response = make_response(render_template('progress.js', id=new_uuid)) # need a path for the js template
+    response.headers['Content-Type'] = 'text/javascript'
+    return response
 
 
 # query db and return list of pageloads

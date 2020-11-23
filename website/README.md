@@ -20,6 +20,8 @@ While still inside the 'my-app; directory, run the following commands to get ext
 npm install react-datepicker
 npm install react-bootstrap bootstrap
 npm install recharts
+npm install standard
+npm install node-fetch
 ```
 
 Alternatively you can run it all in one line with this.
@@ -31,4 +33,4 @@ npm install react-datepicker react-bootstrap bootstrap recharts
 Once you have react installed, copy the files in this folder into the 'my-app' directory. When prompted to replace files say yes. You should now be able to have a page with the rendered components. 
 
 ## Built With
-[React](https://github.com/facebook/create-react-app) 
+[React](https://github.com/facebook/create-react-app)

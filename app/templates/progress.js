@@ -1,5 +1,5 @@
 // Namespace object.
-// Nessisary to prevent polluting the global namespace
+// Necessary to prevent polluting the global namespace
 var Progress = {
   url: "/read/{{ id }}",
   announce: function() {
