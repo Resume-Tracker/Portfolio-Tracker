@@ -8,6 +8,7 @@
     "@testing-library/user-event": "^12.2.0",
     "bootstrap": "^4.5.3",
     "canvasjs": "^1.8.3",
+    "node-fetch": "^2.6.1",
     "react": "^17.0.1",
     "react-bootstrap": "^1.4.0",
     "react-datepicker": "^3.3.0",
@@ -16,6 +17,7 @@
     "recharts": "^1.8.5",
     "semantic-ui-css": "^2.4.1",
     "semantic-ui-react": "^2.0.1",
+    "standard": "^16.0.2",
     "web-vitals": "^0.2.4"
   },
   "scripts": {

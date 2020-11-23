@@ -1,29 +1,44 @@
-import React from 'react'
-import Table from 'react-bootstrap/Table';
+import React, { useState, useEffect } from 'react'
+import Table from 'react-bootstrap/Table'
 
-const PageloadsTable = ({ pageloadsPerCompany }) => {
+const fetch = require('node-fetch')
+
+export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
+  const [visitsPerCompany, setVisitsPerCompany] = useState([])
+
+  useEffect(() => {
+    fetch('/pageloads_per_company?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
+      .then(response => response.json())
+      .then(data => {
+        setVisitsPerCompany(data)
+      })
+  }, [encodedStartDate, encodedEndDate])
+
   // Create a React HTML-like element for the table head
-  const tableHead = <tr>
-                      <th>Company Name</th>
-                      <th>View Count</th>
-                    </tr>
+  const tableHead = (
+    <tr>
+      <th>Company Name</th>
+      <th>View Count</th>
+    </tr>
+  )
 
   const tableEntries = []
+
   // Store company name and view count pairs as React HTML-like
   // elements into the array
-  for (const [key, value] of Object.entries(pageloadsPerCompany)) {
+  for (const [key, value] of Object.entries(visitsPerCompany)) {
     tableEntries.push(
-                      <tr key={key}>
-                        <td>{key}</td>
-                        <td>{value}</td>
-                      </tr>
-                      )
+      <tr key={key}>
+        <td>{key}</td>
+        <td>{value}</td>
+      </tr>
+    )
   }
 
   // only renders the table if there are data
   if (tableEntries.length) {
     return (
-      <div id="pageloadsTable">
+      <div className='pageloadsTable'>
         <Table striped bordered hover>
           <thead>
             {tableHead}
@@ -36,8 +51,7 @@ const PageloadsTable = ({ pageloadsPerCompany }) => {
     )
   } else {
     return (
-      <div id="pageloadsTable">
-      </div>
+      <div id='pageloadsTable' />
     )
   }
 }

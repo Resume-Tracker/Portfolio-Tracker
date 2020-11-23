@@ -25,11 +25,11 @@
 }
 
 .App-body {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
   font-size: calc(10px + 2vmin);
+}
+
+.pageloadsTable {
+  margin: 25px 75px;
 }
 
 .App-link {
