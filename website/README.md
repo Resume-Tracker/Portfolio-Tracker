@@ -6,7 +6,7 @@ In the current folder (`/website/` relative to the project root) run:
 ```bash
 npm install
 ```
-## Running the test enviornment
+## Running the test environment
 Run the application server from the root server with:
 ``` bash
 python app/ptracker.py
