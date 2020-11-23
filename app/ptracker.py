@@ -143,5 +143,42 @@ def get_pageloads_per_company():
     return jsonify(response_body)
 
 
+@app.route("/read/<rule_id>", methods=["GET"])
+def reached_end_of_page(rule_id):
+    Session = sessionmaker(bind=engine)
+    session = Session()
+
+    record = None
+
+    try:
+        record = session.query(Pageloads).get(rule_id)
+    except Exception as e:
+        session.close()
+        return Response(status=500, response="Unknown error occured")
+
+    if record is None:
+        session.close()
+        return Response(status=404)
+
+    # if date is already filled, do not update
+    if record.page_end is not None:
+        session.close()
+        return Response(status=400)
+
+    record.page_end = datetime.utcnow()
+    session.add(record)
+
+    try:
+        session.commit()
+    except Exception as e:
+        session.rollback()
+        print(e)
+        session.close()
+        return Response(status=500)
+
+    session.close()
+    return Response(status=200)
+
+
 if __name__ == '__main__':
     app.run(debug=True)
