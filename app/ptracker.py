@@ -90,7 +90,7 @@ def get_pageloads_with_date():
 def get_pageloads_per_company():
     """ returns a json file containing:
          {
-         ( 'company', # of hits), ...
+         ( 'company', [# of hits, % of page_ends]), ...
          }
     """
 
@@ -116,7 +116,11 @@ def get_pageloads_per_company():
         start_date_datetime = datetime.utcnow() - timedelta(days=10)
         end_date_datetime = datetime.utcnow()
 
-    record = session.query(func.count(Pageloads.company), Pageloads.company).group_by(Pageloads.company).filter(
+    record = session.query(
+            func.count(Pageloads.company),
+            Pageloads.company,
+            func.count(Pageloads.page_end)
+        ).group_by(Pageloads.company).filter(
         Pageloads.timestamp >= start_date_datetime,
         Pageloads.timestamp <= end_date_datetime).all()
 
@@ -124,18 +128,26 @@ def get_pageloads_per_company():
 
     for r in record:
         #     company name  = count
-        print(r)
         if r[1]:
-            response_body[r[1]] = r[0]
+            page_end_percent = 0
+            if r[2]:
+                page_end_percent = r[2] / r[0]
+            response_body[r[1]] = [r[0], page_end_percent]
 
     # first query does not count null values so a separate query is done
-    record = session.query(func.count("*")).filter(Pageloads.timestamp >= start_date_datetime,
+    record = session.query(
+            func.count("*"),
+            func.count(Pageloads.page_end)
+        ).filter(Pageloads.timestamp >= start_date_datetime,
                                                    Pageloads.timestamp <= end_date_datetime,
                                                    Pageloads.company == None).all()
-
+    
     if record[0][0] is not None:
         if record[0][0] != 0:
-            response_body["Unknown"] = record[0][0]
+            page_end_percent = 0
+            if record[0][1]:
+                page_end_percent = record[0][1] / record[0][0]
+            response_body["Unknown"] = [record[0][0], page_end_percent]
     else:
         raise Exception("Issue counting null values in db")
 
