@@ -14,10 +14,13 @@ export const Pageloads = ({ encodedStartDate, encodedEndDate }) => {
       })
   }, [encodedStartDate, encodedEndDate])
 
+  // convert timestamps in JSON file into Date objects
+  let timestamps = pageloads.map(d => new Date(d.timestamp))
+  // sort timestamps by date in non-decreasing order
+  timestamps = timestamps.sort((a, b) => a - b)
   // convert timestamps into local time format (mm/dd/yyyy) for the graph
-  const timestamps = pageloads.map(d => {
-    const date = new Date(d.timestamp)
-    return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`
+  timestamps = timestamps.map(d => {
+    return `${d.getMonth() + 1}/${d.getDate()}/${d.getFullYear()}`
   })
 
   // count the number of occurences for each timestamp
@@ -40,7 +43,7 @@ export const Pageloads = ({ encodedStartDate, encodedEndDate }) => {
   // only render the line chart if there are data
   if (Object.keys(data).length === 0) {
     return (
-      <div class='pageloads' />
+      <div className='pageloads' />
     )
   } else {
     return (
