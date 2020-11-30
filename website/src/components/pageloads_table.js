@@ -19,6 +19,7 @@ export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
     <tr>
       <th>Company Name</th>
       <th>View Count</th>
+      <th>Scrolled to End</th>
     </tr>
   )
 
@@ -26,11 +27,12 @@ export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
 
   // Store company name and view count pairs as React HTML-like
   // elements into the array
-  for (const [key, value] of Object.entries(visitsPerCompany)) {
+  for (const [key, values] of Object.entries(visitsPerCompany)) {
     tableEntries.push(
       <tr key={key}>
         <td>{key}</td>
-        <td>{value}</td>
+        <td>{values[0]}</td>
+        <td>{(values[1] * 100).toFixed(2)}%</td>
       </tr>
     )
   }
