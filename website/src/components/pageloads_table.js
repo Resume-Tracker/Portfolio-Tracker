@@ -14,7 +14,6 @@ export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
       })
   }, [encodedStartDate, encodedEndDate])
 
-  console.log(visitsPerCompany)
   // Create a React HTML-like element for the table head
   const tableHead = (
     <tr>
@@ -33,7 +32,7 @@ export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
       <tr key={key}>
         <td>{key}</td>
         <td>{values[0]}</td>
-        <td>{values[1]}%</td>
+        <td>{(values[1] * 100).toFixed(2)}%</td>
       </tr>
     )
   }
