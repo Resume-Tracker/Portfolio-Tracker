@@ -21,6 +21,11 @@ class Sessions(Base):
     username = Column(String(), nullable=False)
     session_expire = Column(DateTime, nullable=False)
 
+class Users(Base):
+    __tablename__ = 'users'
+    name = Column(String(), primary_key=True)
+    password = Column(String(), nullable=False)
+
 Base.metadata.create_all(engine)
 
 # test
