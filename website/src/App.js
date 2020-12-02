@@ -1,53 +1,48 @@
-import React, { useState } from 'react'
-import 'react-datepicker/dist/react-datepicker.css'
+import React, { useState, useEffect } from "react";
+
+import Routes from "./routes";
+import { AppContext } from "./libs/context_lib";
+
 import './App.css'
 
-// Components
-import Pageloads from './components/pageloads_graph'
-import PageloadsTable from './components/pageloads_table'
-import DateRange from './components/date_range'
+function App() {
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthenticated, userHasAuthenticated] = useState(false);
 
-function App () {
-  const [endDate, setEndDate] = useState(new Date())
-  const [startDate, setStartDate] = useState(new Date(endDate.getTime() - (10 * 24 * 60 * 60 * 1000)))
-  endDate.setHours(23, 59, 59, 999)
-  startDate.setHours(0, 0, 0, 0)
+  // empty array: only run on the first render
+  useEffect(() => {
+    // check for valid session before website render
+    onLoad();
+  }, []);
 
-  const [, startDay, , startYear, startTime] = startDate.toUTCString().split(' ')
-  const startMonth = startDate.getUTCMonth() + 1
-  const startDateString = startYear + '-' + startMonth + '-' + startDay + ' ' + startTime
+  async function onLoad() {
+    await fetch('/check_session')
+    .then(response => {
+      if (response.status === 200) {
+        userHasAuthenticated(true);
+      }
+    })
+    .catch((error) => {
+      console.error('Error:', error)
+    })
 
-  const [, endDay, , endYear, endTime] = endDate.toUTCString().split(' ')
-  const endMonth = endDate.getUTCMonth() + 1
-  const endDateString = endYear + '-' + endMonth + '-' + endDay + ' ' + endTime
-
-  const startDateEncoded = encodeURIComponent(startDateString)
-  const endDateEncoded = encodeURIComponent(endDateString)
+    setIsAuthenticating(false);
+  }
 
   return (
-    <div className='App'>
+    !isAuthenticating && (
+      <>
       <div className='App-header'>
         <h1>Portfolio Tracker</h1>
       </div>
-      <div className='App-body'>
-        <DateRange
-          startDate={startDate}
-          endDate={endDate}
-          setStartDate={setStartDate}
-          setEndDate={setEndDate}
-        />
-        <Pageloads
-          encodedStartDate={startDateEncoded}
-          encodedEndDate={endDateEncoded}
-        />
-        <PageloadsTable
-          encodedStartDate={startDateEncoded}
-          encodedEndDate={endDateEncoded}
-        />
+      <div className="App container py-3">
+        <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
+          <Routes />
+        </AppContext.Provider>
       </div>
-
-    </div>
-  )
+      </>
+    )
+  );
 }
 
 export default App
