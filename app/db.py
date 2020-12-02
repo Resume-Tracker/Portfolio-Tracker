@@ -15,6 +15,11 @@ class Pageloads(Base):
     company = Column(String(50), nullable=True)
     page_end = Column(DateTime, nullable=True)
 
+class Sessions(Base):
+    __tablename__ = 'sessions'
+    id = Column(CHAR(32), primary_key=True)
+    username = Column(String(), nullable=False)
+    session_expire = Column(DateTime, nullable=False)
 
 class Users(Base):
     __tablename__ = 'users'
