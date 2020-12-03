@@ -1,13 +1,13 @@
 from flask import Flask, request, jsonify, Response, make_response, render_template
 app = Flask(__name__)
 
-from db import engine, Pageloads
+from db import engine, Pageloads, Users, Sessions
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import uuid
+from argon2 import PasswordHasher
 
-from pixel import PIXEL
 from iphandle import get_company_from_request
 
 
@@ -191,6 +191,55 @@ def reached_end_of_page(rule_id):
     session.close()
     return Response(status=200)
 
+@app.route("/login", methods=["POST"])
+def login():
+    """Handle login requests
+    """
+    hasher = PasswordHasher()
+    payload = request.json
+    username = payload['user']
+    password = payload['pass']
+    DBSessionMaker = sessionmaker(bind=engine)
+    db_session = BDSessionMaker()
+    user = db_session.query(Users).get(username)
+    try:
+        hasher.verify(user.password, password)
+
+        # If the hash parameters are out of date or the user update the hash
+        # One example of an out of date parameter is a insufficient time cost
+        if hasher.check_needs_rehash(user.password):
+            user.password = hasher.hash(password)
+
+        expire = datetime.utcnow() + timedelta(hours=1)
+
+        session_id = uuid.uuid4().hex
+
+        user_session = Session(
+            # This must be a uuid4 or large cryptographically secure random number
+            # A other formats of UUID can have several bytes perdicted presenting
+            # a potential brute forcing risk
+            # This implimentation choice assumes CPython is being used.
+            id=session_id,
+            username=username,
+            session_expire=expire
+        )
+
+        db_session.add(user_session)
+        db_session.commit()
+
+        auth_resp = Response(status=200)
+        auth_resp.set_cookie('session', session_id)
+        db_session.commit()
+        return auth_resp
+
+    except Exception:
+        db_session.rollback()
+
+    # If we get to the end of this funtion something went wrong.
+    # Thus make sure the user does not think they are logged in
+    err_resp = Response(status=401)
+    err_resp.delete_cookie('session')
+    return err_resp
 
 if __name__ == '__main__':
     app.run(debug=True)
