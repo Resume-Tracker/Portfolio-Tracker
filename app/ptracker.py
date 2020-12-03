@@ -192,7 +192,7 @@ def reached_end_of_page(rule_id):
     return Response(status=200)
 
 
-@app.route("/check_session", methods=['GET'])
+@app.route('/check_session', methods=['GET'])
 def check_session():
     # returns username of the valid session as a string
     username = check_valid_session(request)
