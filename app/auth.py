@@ -21,7 +21,7 @@ def check_valid_session(request):
 
         # query searching for id
         records = db_session.query(Sessions).get(id)
-        if record[0] is not None:
+        if records[0] is not None:
             session_row = records[0]
 
             # check if session has not expired yet
