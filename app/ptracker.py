@@ -249,5 +249,22 @@ def login():
     err_resp.delete_cookie('session')
     return err_resp
 
+@app.route('/check_session', methods=['GET'])
+def check_session():
+    # returns username of the valid session as a string
+    username = check_valid_session(request)
+    if username is None:
+        # invalid session, return 401 unauthorized
+        return Response(status=401, response='401 Unauthorized: Invalid Session')
+    else:
+        # valid session, return the username
+        response = make_response(username)
+        return response
+
+
+def check_valid_session(request):
+    return None
+
+
 if __name__ == '__main__':
     app.run(debug=True)
