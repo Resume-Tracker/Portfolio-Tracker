@@ -194,15 +194,21 @@ def reached_end_of_page(rule_id):
 @app.route("/login", methods=["POST"])
 def login():
     """Handle login requests
+
+    On successfull login a session with a length of an hour should be generated.
+    On failure an error should be thrown.
     """
     hasher = PasswordHasher()
+
     payload = request.json
     username = payload['user']
     password = payload['pass']
+
     DBSessionMaker = sessionmaker(bind=engine)
-    db_session = BDSessionMaker()
-    user = db_session.query(Users).get(username)
+    db_session = DBSessionMaker()
+
     try:
+        user = db_session.query(Users).get(username)
         hasher.verify(user.password, password)
 
         # If the hash parameters are out of date or the user update the hash
@@ -210,11 +216,12 @@ def login():
         if hasher.check_needs_rehash(user.password):
             user.password = hasher.hash(password)
 
+        # calculate an expiration time one our from now
         expire = datetime.utcnow() + timedelta(hours=1)
 
         session_id = uuid.uuid4().hex
 
-        user_session = Session(
+        user_session = Sessions(
             # This must be a uuid4 or large cryptographically secure random number
             # A other formats of UUID can have several bytes perdicted presenting
             # a potential brute forcing risk
@@ -223,7 +230,6 @@ def login():
             username=username,
             session_expire=expire
         )
-
         db_session.add(user_session)
         db_session.commit()
 
@@ -232,6 +238,8 @@ def login():
         db_session.commit()
         return auth_resp
 
+    # For security reasons only two responses may be provided
+    # Thus errors do not need to be handled individually
     except Exception:
         db_session.rollback()
 
