@@ -1,4 +1,5 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
+import { useHistory } from 'react-router-dom'
 import 'react-datepicker/dist/react-datepicker.css'
 
 // Components
@@ -23,6 +24,24 @@ export default function Dashboard () {
   const startDateEncoded = encodeURIComponent(startDateString)
   const endDateEncoded = encodeURIComponent(endDateString)
 
+  // check if session is valid before fetching pageloads data
+  const history = useHistory()
+
+  useEffect(() => {
+    async function onDashboard() {
+      await fetch('/check_session')
+        .then(response => {
+          if (response.status !== 200) {
+            history.push('/logout')
+          }
+        })
+        .catch((error) => {
+          console.error('Error:', error)
+        })
+    }
+    onDashboard()
+  }, [startDate, endDate, history])
+
   return (
     <div className='App'>
       <div className='App-body'>
@@ -32,6 +51,7 @@ export default function Dashboard () {
           setStartDate={setStartDate}
           setEndDate={setEndDate}
         />
+        <br />
         <Pageloads
           encodedStartDate={startDateEncoded}
           encodedEndDate={endDateEncoded}

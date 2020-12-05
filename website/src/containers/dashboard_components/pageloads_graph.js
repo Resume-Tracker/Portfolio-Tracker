@@ -1,5 +1,15 @@
 import React, { useState, useEffect } from 'react'
-import { ResponsiveContainer, ComposedChart, Line, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend } from 'recharts'
+import {
+  ResponsiveContainer,
+  ComposedChart,
+  Line,
+  Bar,
+  XAxis,
+  YAxis,
+  CartesianGrid,
+  Tooltip,
+  Legend
+} from 'recharts'
 
 const fetch = require('node-fetch')
 
@@ -7,11 +17,21 @@ export const Pageloads = ({ encodedStartDate, encodedEndDate }) => {
   const [pageloads, setPageloads] = useState([])
 
   useEffect(() => {
-    fetch('/pageloads?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
-      .then(response => response.json())
-      .then(data => {
-        setPageloads(data)
-      })
+    async function fetchPageloads() {
+      try {
+        await fetch('/pageloads?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
+          .then(response => response.json())
+          .then(data => {
+            // fetch successful
+            setPageloads(data)
+          }, () => {
+            // fetch failed; do nothing
+          })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    fetchPageloads()
   }, [encodedStartDate, encodedEndDate])
 
   // convert timestamps in JSON file into Date objects
@@ -43,7 +63,7 @@ export const Pageloads = ({ encodedStartDate, encodedEndDate }) => {
   // only render the line chart if there are data
   if (Object.keys(data).length === 0) {
     return (
-      <div className='pageloads' />
+      <div className='pageloads'>No data available</div>
     )
   } else {
     return (
