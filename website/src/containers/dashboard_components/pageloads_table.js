@@ -5,12 +5,12 @@ const fetch = require('node-fetch')
 
 export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
   const [visitsPerCompany, setVisitsPerCompany] = useState([])
-  
+
   useEffect(() => {
-    async function fetchPageloadsTable() {
+    async function fetchPageloadsTable () {
       try {
         await fetch('/pageloads_per_company?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
-          .then(response =>response.json())
+          .then(response => response.json())
           .then(data => {
             // fetch successful
             setVisitsPerCompany(data)
