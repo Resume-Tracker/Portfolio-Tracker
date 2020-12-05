@@ -1,7 +1,7 @@
 import React from 'react'
 import { Switch } from 'react-router-dom'
 import Dashboard from './containers/dashboard'
-import Login from './containers/login_timothy'
+import Login from './containers/login'
 import Logout from './containers/logout'
 import NotFound from './containers/not_found'
 import AuthenticatedRoute from './components/authenticated_route'
