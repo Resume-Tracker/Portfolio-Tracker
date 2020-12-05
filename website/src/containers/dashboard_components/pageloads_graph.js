@@ -17,7 +17,7 @@ export const Pageloads = ({ encodedStartDate, encodedEndDate }) => {
   const [pageloads, setPageloads] = useState([])
 
   useEffect(() => {
-    async function fetchPageloads() {
+    async function fetchPageloads () {
       try {
         await fetch('/pageloads?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
           .then(response => response.json())

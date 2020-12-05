@@ -26,9 +26,10 @@ export default function Dashboard () {
 
   // check if session is valid before fetching pageloads data
   const history = useHistory()
+  const fetch = require('node-fetch')
 
   useEffect(() => {
-    async function onDashboard() {
+    async function onDashboard () {
       await fetch('/check_session')
         .then(response => {
           if (response.status !== 200) {
