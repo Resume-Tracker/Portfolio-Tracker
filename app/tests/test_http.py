@@ -164,3 +164,40 @@ def test_pageloads_bounded_json(app, client):
         if match:
             found_req += 1
     assert found_req == 1
+
+def test_pageloads_per_company_bounded_json(app, client):
+    """Test that pageloads_per_company with time bounds returns JSON with the correct pageload object
+    """
+    # Clear data before running
+    session = sessionmaker(bind=engine)()
+    # Errors are not checked here if there is a database error I want to know about it
+    # Ignoring a failure to delete the DB may break this test
+    session.query(Pageloads).delete()
+    session.commit()
+
+    start = datetime.utcnow()
+    res = client.get('/addrow', headers={
+            'X-Real-IP':'128.114.119.88',
+            'Referer': 'https://www.example.com/resume.html'
+        })
+    stop = datetime.utcnow()
+    assert res.status_code == 200
+
+    # convert timings to bounds
+    f_start = start.strftime('%Y-%m-%d%%20%H:%M:%S')
+    f_stop = (
+            # offset by 1 second to prevent instantaneous window
+            stop+timedelta(seconds=1)
+        ).strftime('%Y-%m-%d%%20%H:%M:%S')
+
+    res = client.get(f'/pageloads_per_company?start_date={f_start}&end_date={f_stop}')
+    # If the return code is not 200 something else may be wrong
+    assert res.status_code == 200
+    # Check that we are providing content type
+    # There are two valid MIME types for JSON
+    assert res.headers['Content-Type'] in ['application/json', 'text/json']
+    # Parse the data to see if it is compliant
+    found_req = 0
+    data = json.loads(res.get_data(as_text=True))
+    assert 'ucsc.edu' in data
+    assert data['ucsc.edu'] == [1,0]
