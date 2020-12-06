@@ -46,6 +46,12 @@ def insert():
 #            start_date is set to current time - 10 days
 @app.route('/pageloads')
 def get_pageloads_with_date():
+
+    # ensure user is logged in before completing request
+    if check_valid_session(request) is None:
+        return Response(status=401, response='401 Unauthorized: Invalid Session')
+
+
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -93,6 +99,10 @@ def get_pageloads_per_company():
          ( 'company', [# of hits, % of page_ends]), ...
          }
     """
+
+    # ensure user is logged in before completing request
+    if check_valid_session(request) is None:
+        return Response(status=401, response='401 Unauthorized: Invalid Session')
 
     Session = sessionmaker(bind=engine)
     session = Session()
