@@ -20,15 +20,13 @@ def check_valid_session(request):
             db_session = DBSession()
 
             # query searching for id
-            records = db_session.query(Sessions).get(id)
-            if records[0] is not None:
-                session_row = records[0]
-
+            session = db_session.query(Sessions).get(id)
+            if session is not None:
                 # check if session has not expired yet
-                if datetime.utcnow() < session_row[2]:
+                if datetime.utcnow() < session.session_expire:
                     db_session.close()
-                    return session_row[1]
-            
+                    return session.username
+
             db_session.close()
 
     except Exception as e:
