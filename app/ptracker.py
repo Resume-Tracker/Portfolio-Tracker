@@ -9,7 +9,7 @@ import uuid
 from argon2 import PasswordHasher
 
 from iphandle import get_company_from_request
-
+from auth import check_valid_session
 
 # TODO: Input company name
 @app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
@@ -291,11 +291,6 @@ def check_session():
         # valid session, return the username
         response = make_response(username)
         return response
-
-
-def check_valid_session(request):
-    return None
-
 
 if __name__ == '__main__':
     app.run(debug=True)
