@@ -7,6 +7,8 @@ import Pageloads from './dashboard_components/pageloads_graph'
 import PageloadsTable from './dashboard_components/pageloads_table'
 import DateRange from './dashboard_components/date_range'
 
+const fetch = require('node-fetch')
+
 export default function Dashboard () {
   const [endDate, setEndDate] = useState(new Date())
   const [startDate, setStartDate] = useState(new Date(endDate.getTime() - (10 * 24 * 60 * 60 * 1000)))
@@ -26,7 +28,6 @@ export default function Dashboard () {
 
   // check if session is valid before fetching pageloads data
   const history = useHistory()
-  const fetch = require('node-fetch')
 
   useEffect(() => {
     async function onDashboard () {
