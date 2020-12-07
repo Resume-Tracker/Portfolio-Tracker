@@ -7,11 +7,21 @@ export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
   const [visitsPerCompany, setVisitsPerCompany] = useState([])
 
   useEffect(() => {
-    fetch('/pageloads_per_company?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
-      .then(response => response.json())
-      .then(data => {
-        setVisitsPerCompany(data)
-      })
+    async function fetchPageloadsTable () {
+      try {
+        await fetch('/pageloads_per_company?start_date=' + encodedStartDate + '&end_date=' + encodedEndDate)
+          .then(response => response.json())
+          .then(data => {
+            // fetch successful
+            setVisitsPerCompany(data)
+          }, () => {
+            // fetch failed; do nothing
+          })
+      } catch (e) {
+        console.error(e)
+      }
+    }
+    fetchPageloadsTable()
   }, [encodedStartDate, encodedEndDate])
 
   // Create a React HTML-like element for the table head

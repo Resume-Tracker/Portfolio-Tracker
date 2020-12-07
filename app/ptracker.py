@@ -1,15 +1,15 @@
 from flask import Flask, request, jsonify, Response, make_response, render_template
 app = Flask(__name__)
 
-from db import engine, Pageloads
+from db import engine, Pageloads, Users, Sessions
 from sqlalchemy.orm import sessionmaker
 from datetime import datetime, timedelta
 from sqlalchemy import func
 import uuid
+from argon2 import PasswordHasher
 
-from pixel import PIXEL
 from iphandle import get_company_from_request
-
+from auth import check_valid_session
 
 # TODO: Input company name
 @app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
@@ -191,6 +191,63 @@ def reached_end_of_page(rule_id):
     session.close()
     return Response(status=200)
 
+@app.route("/login", methods=["POST"])
+def login():
+    """Handle login requests
+
+    On successfull login a session with a length of an hour should be generated.
+    On failure an error should be thrown.
+    """
+    hasher = PasswordHasher()
+
+    payload = request.json
+    username = payload['user']
+    password = payload['pass']
+
+    DBSessionMaker = sessionmaker(bind=engine)
+    db_session = DBSessionMaker()
+
+    try:
+        user = db_session.query(Users).get(username)
+        hasher.verify(user.password, password)
+
+        # If the hash parameters are out of date or the user update the hash
+        # One example of an out of date parameter is a insufficient time cost
+        if hasher.check_needs_rehash(user.password):
+            user.password = hasher.hash(password)
+
+        # calculate an expiration time one our from now
+        expire = datetime.utcnow() + timedelta(hours=1)
+
+        session_id = uuid.uuid4().hex
+
+        user_session = Sessions(
+            # This must be a uuid4 or large cryptographically secure random number
+            # A other formats of UUID can have several bytes perdicted presenting
+            # a potential brute forcing risk
+            # This implimentation choice assumes CPython is being used.
+            id=session_id,
+            username=username,
+            session_expire=expire
+        )
+        db_session.add(user_session)
+        db_session.commit()
+
+        auth_resp = Response(status=200)
+        auth_resp.set_cookie('session', session_id)
+        db_session.commit()
+        return auth_resp
+
+    # For security reasons only two responses may be provided
+    # Thus errors do not need to be handled individually
+    except Exception:
+        db_session.rollback()
+
+    # If we get to the end of this funtion something went wrong.
+    # Thus make sure the user does not think they are logged in
+    err_resp = Response(status=401)
+    err_resp.delete_cookie('session')
+    return err_resp
 
 @app.route('/check_session', methods=['GET'])
 def check_session():
@@ -203,11 +260,6 @@ def check_session():
         # valid session, return the username
         response = make_response(username)
         return response
-
-
-def check_valid_session(request):
-    return None
-
 
 if __name__ == '__main__':
     app.run(debug=True)
