@@ -6,6 +6,15 @@ export default function AuthenticatedRoute ({ children, ...rest }) {
   const { pathname, search } = useLocation()
   const { isAuthenticated } = useAppContext()
 
+  // no redirect back to /logout to prevent loops
+  function getRedirectURL() {
+    if (pathname === '/logout') {
+      return '/login'
+    } else {
+      return `/login?redirect=${pathname}${search}`
+    }
+  }
+  
   return (
     <Route {...rest}>
       {isAuthenticated
@@ -14,7 +23,7 @@ export default function AuthenticatedRoute ({ children, ...rest }) {
             children
           )
         : (
-          <Redirect to={`/login?redirect=${pathname}${search}`} />
+          <Redirect to={getRedirectURL()} />
           )}
     </Route>
   )
