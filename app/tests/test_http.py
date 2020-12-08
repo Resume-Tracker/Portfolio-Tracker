@@ -323,10 +323,8 @@ def test_login_duration(app, client):
     # get all session cookies set
     session_ids = [cookie for cookie in cookie_setters if cookie.startswith('session=')]
     assert len(session_ids) == 1
-    session_id = session_ids[0]
-        .replace('session=','') # remove the cookie name
-        .split(';')[0] # remove the cookie path
-    print(session_id)
+    # get cookie value
+    session_id = session_ids[0].replace('session=','').split(';')[0]
     expire = db_session.query(Sessions).get(session_id).session_expire
 
     assert expire-stop <= timedelta(hours=1)
