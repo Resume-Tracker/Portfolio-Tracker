@@ -3,7 +3,7 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ptracker import app as flask_app
-from db import engine, Pageloads, Sessions
+from db import engine, Pageloads, Sessions, Users
 
 import pytest
 
@@ -259,7 +259,7 @@ def test_pageloads_per_company_bounded_json(app, client):
     assert data['ucsc.edu'] == [1,0]
 
 def test_read_add_timestamp(app, client):
-    """Test that /read adds a correct read timestamp
+    """Test that /read adds the correct read timestamp
     """
     # Clear data before running
     db_session = sessionmaker(bind=engine)()
@@ -289,4 +289,46 @@ def test_read_add_timestamp(app, client):
     
     load = db_session.query(Pageloads).get('9c0e2d63a7ed4a7fbfdaa2637fe24f4')
     assert start < load.page_end < stop
+    db_session.close()
+
+def test_login_duration(app, client):
+    """Test that /login creates sessions of no more than 1 hour
+    """
+    # Clear data before running
+    db_session = sessionmaker(bind=engine)()
+    # Errors are not checked here if there is a database error I want to know
+    # about it
+    # Ignoring a failure to delete the DB may break this test
+    db_session.query(Users).delete()
+    db_session.query(Sessions).delete()
+    load_time = datetime.utcnow()-timedelta(seconds=5)
+    user = Users(
+            name='testuser',
+            password='$argon2id$v=19$m=102400,t=2,p=8$RClylCHXGWztAvf4yOsa+Q$tANnnmfpEy6FejlH7vVMow'
+        )
+    db_session.add(user)
+    db_session.commit()
+
+    start = datetime.utcnow()
+    res = client.post(
+            '/login',
+            data='{"user":"testuser","pass":"password1234"}',
+            headers={'Content-Type': 'application/json'}
+        )
+    stop = datetime.utcnow()
+    assert res.status_code == 200
+
+    # Get all cookies set in the last request
+    cookie_setters = [header[1] for header in res.headers if header[0] == 'Set-Cookie']
+    # get all session cookies set
+    session_ids = [cookie for cookie in cookie_setters if cookie.startswith('session=')]
+    assert len(session_ids) == 1
+    session_id = session_ids[0]
+        .replace('session=','') # remove the cookie name
+        .split(';')[0] # remove the cookie path
+    print(session_id)
+    expire = db_session.query(Sessions).get(session_id).session_expire
+
+    assert expire-stop <= timedelta(hours=1)
+
     db_session.close()
