@@ -41,6 +41,7 @@ def test_session_expired(app, client):
     db_session.add(session)
     db_session.commit()
     db_session.close()
-    
+
+    client.set_cookie('localhost', 'session', '9c0e2d63a7ed4a7fbfbfdaa2637fe2f4')
     res = client.get('/check_session')
     assert res.status_code == 401
