@@ -189,11 +189,18 @@ def test_pageloads_per_company_bounded_json(app, client):
     """Test that pageloads_per_company with time bounds returns JSON with the correct pageload object
     """
     # Clear data before running
-    session = sessionmaker(bind=engine)()
+    db_session = sessionmaker(bind=engine)()
     # Errors are not checked here if there is a database error I want to know about it
     # Ignoring a failure to delete the DB may break this test
-    session.query(Pageloads).delete()
-    session.commit()
+    db_session.query(Pageloads).delete()
+    db_session.query(Sessions).delete()
+    session = Sessions(
+            id='9c0e2d63a7ed4a7fbfdaa2637fe24f4',
+            username='testuser',
+            session_expire=datetime.utcnow()+timedelta(hours=1)
+        )
+    db_session.add(session)
+    db_session.commit()
 
     start = datetime.utcnow()
     res = client.get('/addrow', headers={
@@ -210,6 +217,7 @@ def test_pageloads_per_company_bounded_json(app, client):
             stop+timedelta(seconds=1)
         ).strftime('%Y-%m-%d%%20%H:%M:%S')
 
+    client.set_cookie('localhost', 'session', '9c0e2d63a7ed4a7fbfdaa2637fe24f4')
     res = client.get(f'/pageloads_per_company?start_date={f_start}&end_date={f_stop}')
     # If the return code is not 200 something else may be wrong
     assert res.status_code == 200
