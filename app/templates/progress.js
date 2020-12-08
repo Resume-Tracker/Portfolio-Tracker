@@ -1,13 +1,12 @@
 // Namespace object.
 // Necessary to prevent polluting the global namespace
 var Progress = {
-  url: "/read/{{ id }}",
+  url: "{{ base_name }}/read/{{ id }}",
   announce: function() {
-    fetch(url)
+    fetch(Progress.url)
   },
   record: function() {
-    let diff = document.documentElement.scrollHeight - document.documentElement.scrollTop
-    if (diff === document.documentElement.clientHeight) {
+    if ((window.innerHeight + window.scrollY) >= document.body.offsetHeight) {
       document.removeEventListener("scroll", Progress.record)
       Progress.announce()
     }
