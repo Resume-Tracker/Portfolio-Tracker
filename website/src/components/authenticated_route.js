@@ -7,14 +7,14 @@ export default function AuthenticatedRoute ({ children, ...rest }) {
   const { isAuthenticated } = useAppContext()
 
   // no redirect back to /logout to prevent loops
-  function getRedirectURL() {
+  function getRedirectURL () {
     if (pathname === '/logout') {
       return '/login'
     } else {
       return `/login?redirect=${pathname}${search}`
     }
   }
-  
+
   return (
     <Route {...rest}>
       {isAuthenticated

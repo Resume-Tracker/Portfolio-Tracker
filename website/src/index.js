@@ -5,8 +5,6 @@ import './index.css'
 import { BrowserRouter as Router } from 'react-router-dom'
 import reportWebVitals from './reportWebVitals'
 import 'semantic-ui-css/semantic.min.css'
-import Login from './components/login.js'
-import { BrowserRouter as Router } from 'react-router-dom'
 
 ReactDOM.render(
   <React.StrictMode>
