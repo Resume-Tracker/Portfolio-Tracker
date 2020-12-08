@@ -1,7 +1,7 @@
 // Namespace object.
 // Necessary to prevent polluting the global namespace
 var Progress = {
-  url: "/read/{{ id }}",
+  url: "{{ base_name }}/read/{{ id }}",
   announce: function() {
     fetch(Progress.url)
   },

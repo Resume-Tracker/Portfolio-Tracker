@@ -10,6 +10,7 @@ from argon2 import PasswordHasher
 
 from iphandle import get_company_from_request
 from auth import check_valid_session
+from config import BASE_NAME
 
 # TODO: Input company name
 @app.route('/addrow', methods=['POST', 'GET', 'HEAD'])
@@ -34,7 +35,11 @@ def insert():
     finally:
         session.close()
 
-    response = make_response(render_template('progress.js', id=new_uuid)) # need a path for the js template
+    response = make_response(render_template(
+            'progress.js',
+            id=new_uuid,
+            base_name=BASE_NAME
+        ))
     response.headers['Content-Type'] = 'text/javascript'
     return response
 
