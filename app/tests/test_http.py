@@ -3,7 +3,7 @@ import os, sys
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
 
 from ptracker import app as flask_app
-from db import engine, Pageloads
+from db import engine, Pageloads, Sessions
 
 import pytest
 
@@ -91,11 +91,18 @@ def test_pageloads_json(app, client):
     """Test that pageloads returns JSON with the correct pageload object
     """
     # Clear data before running
-    session = sessionmaker(bind=engine)()
+    db_session = sessionmaker(bind=engine)()
     # Errors are not checked here if there is a database error I want to know about it
     # Ignoring a failure to delete the DB may break this test
-    session.query(Pageloads).delete()
-    session.commit()
+    db_session.query(Pageloads).delete()
+    db_session.query(Sessions).delete()
+    session = Sessions(
+            id="9c0e2d63a7ed4a7fbfbfdaa2637fe2f4",
+            username="testuser",
+            session_expire=datetime.utcnow()+timedelta(hours=1)
+        )
+    db_session.add(session)
+    db_session.commit()
 
     start = datetime.utcnow()
     res = client.get('/addrow', headers={
@@ -104,6 +111,9 @@ def test_pageloads_json(app, client):
         })
     stop = datetime.utcnow()
     assert res.status_code == 200
+    # Due to the test client sending WSGI objects rather than making HTTP requests
+    # cookies cannot be set with a header
+    client.set_cookie('localhost', 'session', '9c0e2d63a7ed4a7fbfbfdaa2637fe2f4')
     res = client.get('/pageloads')
     # If the return code is not 200 something else may be wrong
     assert res.status_code == 200
@@ -126,11 +136,18 @@ def test_pageloads_bounded_json(app, client):
     """Test that pageloads with time bounds returns JSON with the correct pageload object
     """
     # Clear data before running
-    session = sessionmaker(bind=engine)()
+    db_session = sessionmaker(bind=engine)()
     # Errors are not checked here if there is a database error I want to know about it
     # Ignoring a failure to delete the DB may break this test
-    session.query(Pageloads).delete()
-    session.commit()
+    db_session.query(Pageloads).delete()
+    db_session.query(Sessions).delete()
+    session = Sessions(
+            id="9c0e2d63a7ed4a7fbfbfdaa2637fe2f4",
+            username="testuser",
+            session_expire=datetime.utcnow()+timedelta(hours=1)
+        )
+    db_session.add(session)
+    db_session.commit()
 
     start = datetime.utcnow()
     res = client.get('/addrow', headers={
@@ -147,6 +164,9 @@ def test_pageloads_bounded_json(app, client):
             stop+timedelta(seconds=1)
         ).strftime('%Y-%m-%d%%20%H:%M:%S')
 
+    # Due to the test client sending WSGI objects rather than making HTTP requests
+    # cookies cannot be set with a header
+    client.set_cookie('localhost', 'session', '9c0e2d63a7ed4a7fbfbfdaa2637fe2f4')
     res = client.get(f'/pageloads?start_date={f_start}&end_date={f_stop}')
     # If the return code is not 200 something else may be wrong
     assert res.status_code == 200

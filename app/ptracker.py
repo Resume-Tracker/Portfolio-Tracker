@@ -46,6 +46,12 @@ def insert():
 #            start_date is set to current time - 10 days
 @app.route('/pageloads')
 def get_pageloads_with_date():
+
+    # ensure user is logged in before completing request
+    if check_valid_session(request) is None:
+        return Response(status=401, response='401 Unauthorized: Invalid Session')
+
+
     Session = sessionmaker(bind=engine)
     session = Session()
 
@@ -93,6 +99,10 @@ def get_pageloads_per_company():
          ( 'company', [# of hits, % of page_ends]), ...
          }
     """
+
+    # ensure user is logged in before completing request
+    if check_valid_session(request) is None:
+        return Response(status=401, response='401 Unauthorized: Invalid Session')
 
     Session = sessionmaker(bind=engine)
     session = Session()
@@ -191,6 +201,7 @@ def reached_end_of_page(rule_id):
     session.close()
     return Response(status=200)
 
+
 @app.route("/login", methods=["POST"])
 def login():
     """Handle login requests
@@ -248,6 +259,36 @@ def login():
     err_resp = Response(status=401)
     err_resp.delete_cookie('session')
     return err_resp
+
+
+@app.route('/logout', methods=['GET'])
+def logout():
+    """Handle logout requests
+
+    Delete user's session entry in the sessions table
+    Also, delete user's cookie whether session entry delete is successful or not
+    Return 200 OK on success
+    Otherwise, return 500 INTERNAL SERVER ERROR
+    """
+    DBSessionMaker = sessionmaker(bind=engine)
+    db_session = DBSessionMaker()
+
+    # Find and delete user's session entry in the session table
+    try:
+        cookie_sess_id = request.cookies.get('session')
+        db_session.query(Sessions).filter(Sessions.id==cookie_sess_id).delete()
+        db_session.commit()
+        logout_resp = Response(status=200)
+        logout_resp.delete_cookie('session')
+        return logout_resp
+    except Exception:
+        db_session.rollback()
+
+    # Delete user's cookie if something went wrong
+    err_resp = Response(status=500)
+    err_resp.delete_cookie('session')
+    return err_resp
+
 
 @app.route('/check_session', methods=['GET'])
 def check_session():
