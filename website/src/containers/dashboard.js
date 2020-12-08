@@ -63,7 +63,6 @@ export default function Dashboard () {
           encodedEndDate={endDateEncoded}
         />
       </div>
-
     </div>
   )
 }

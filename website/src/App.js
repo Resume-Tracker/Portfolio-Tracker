@@ -2,12 +2,14 @@ import React, { useState, useEffect } from 'react'
 
 import Routes from './routes'
 import { AppContext } from './libs/context_lib'
+import Navbar from 'react-bootstrap/Navbar'
+import Nav from 'react-bootstrap/Nav'
 
 import './App.css'
 
 const fetch = require('node-fetch')
 
-function App () {
+export default function App () {
   const [isAuthenticating, setIsAuthenticating] = useState(true)
   const [isAuthenticated, userHasAuthenticated] = useState(false)
 
@@ -34,10 +36,29 @@ function App () {
   return (
     !isAuthenticating && (
       <>
-        <div className='App-header'>
-          <h1>Portfolio Tracker</h1>
-        </div>
-        <div className='App container py-3'>
+        <div className='App-default'>
+          <Navbar variant='dark' className='App-header'>
+            <Navbar.Brand className='navbar-brand'>
+              Portfolio Tracker
+            </Navbar.Brand>
+            <Nav>
+              <Nav.Link href='/'>Home</Nav.Link>
+            </Nav>
+            <Navbar.Toggle />
+            <Navbar.Collapse className='justify-content-end'>
+              {isAuthenticated
+                ? (
+                  <Nav>
+                    <Nav.Link href='/logout'>Logout</Nav.Link>
+                  </Nav>
+                  )
+                : (
+                  <Nav>
+                    <Nav.Link href='/login'>Login</Nav.Link>
+                  </Nav>
+                  )}
+            </Navbar.Collapse>
+          </Navbar>
           <AppContext.Provider value={{ isAuthenticated, userHasAuthenticated }}>
             <Routes />
           </AppContext.Provider>
@@ -46,5 +67,3 @@ function App () {
     )
   )
 }
-
-export default App
