@@ -63,7 +63,7 @@ export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
     )
   } else {
     return (
-      <div className='pageloadsTable' />
+      <div className='pageloadsTable'>No data available</div>
     )
   }
 }
