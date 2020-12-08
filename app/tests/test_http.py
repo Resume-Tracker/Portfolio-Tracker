@@ -88,7 +88,7 @@ def test_addrow_org_db(app, client):
     # It cannot return 0 or 2
     assert db_session.query(Pageloads).filter(
             Pageloads.timestamp.between(start, stop)
-        ).one().company == "ucsc.edu"
+        ).one().company == 'ucsc.edu'
     db_session.close()
 
 def test_pageloads_json(app, client):
@@ -102,8 +102,8 @@ def test_pageloads_json(app, client):
     db_session.query(Pageloads).delete()
     db_session.query(Sessions).delete()
     session = Sessions(
-            id="9c0e2d63a7ed4a7fbfbfdaa2637fe2f4",
-            username="testuser",
+            id='9c0e2d63a7ed4a7fbfbfdaa2637fe2f4',
+            username='testuser',
             session_expire=datetime.utcnow()+timedelta(hours=1)
         )
     db_session.add(session)
@@ -157,8 +157,8 @@ def test_pageloads_bounded_json(app, client):
     db_session.query(Pageloads).delete()
     db_session.query(Sessions).delete()
     session = Sessions(
-            id="9c0e2d63a7ed4a7fbfbfdaa2637fe2f4",
-            username="testuser",
+            id='9c0e2d63a7ed4a7fbfbfdaa2637fe2f4',
+            username='testuser',
             session_expire=datetime.utcnow()+timedelta(hours=1)
         )
     db_session.add(session)
