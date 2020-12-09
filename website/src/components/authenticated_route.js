@@ -2,6 +2,10 @@ import React from 'react'
 import { Route, Redirect, useLocation } from 'react-router-dom'
 import { useAppContext } from '../libs/context_lib'
 
+/*
+  React component that checks if the user is authenticated and able to view their requested page.
+  Logout page is automatically redirected back to the login page.
+*/
 export default function AuthenticatedRoute ({ children, ...rest }) {
   const { pathname, search } = useLocation()
   const { isAuthenticated } = useAppContext()

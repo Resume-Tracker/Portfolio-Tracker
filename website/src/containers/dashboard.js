@@ -9,6 +9,11 @@ import DateRange from './dashboard_components/date_range'
 
 const fetch = require('node-fetch')
 
+/*
+  Dashboard component that will render a date range picker, graph of pageloads, and table of pageloads.
+  Dates of the date range picker are stroed here as well as encoded so that they may be passed to our backend endpoints.
+  Dashboard will check for a valid session anytime data is requested.
+*/
 export default function Dashboard () {
   const [endDate, setEndDate] = useState(new Date())
   const [startDate, setStartDate] = useState(new Date(endDate.getTime() - (10 * 24 * 60 * 60 * 1000)))
