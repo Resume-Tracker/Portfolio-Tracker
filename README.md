@@ -1,5 +1,7 @@
 # Portfolio-Tracker
-This is a CSE 115A Project
+Tired of opaque online hiring processes? Want to know if HPE ever read your application? An analytics system for job applications may provide answers.
+
+Several technology companies have implemented data mining systems for job applications. Additionally, job applications in the Coronavirus era have been mostly online. These hiring strategies have made determining the status of your job applications a little ambiguous. Thus, providing an analytics system for job seekers seems like a potential way to improve this situation.
 
 ## Directory Structure
  - `.github/` contains the CI configuration
