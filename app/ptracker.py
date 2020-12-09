@@ -41,6 +41,8 @@ def insert():
             base_name=BASE_NAME
         ))
     response.headers['Content-Type'] = 'text/javascript'
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Request-Method'] = 'GET'
     return response
 
 
