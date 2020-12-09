@@ -19,8 +19,8 @@ This application probably also runs under Apache but you will have to configure 
     1. Make sure permissions are set so nginx can read them
 6. Configure nginx to forward the API calls to the app server and to serve the frontend
     1. Take the appropriate config file below
-        - If you are using a CDN like cloudflare use the CDN_example.cfg config file in the examples directory
-        - If you are not using a CDN use the standard_example.cfg file
+        - If you are using a CDN like cloudflare use the CDN_example.cfg config file in the [examples](https://github.com/Resume-Tracker/Portfolio-Tracker/tree/master/docs/examples) directory
+        - If you are not using a CDN use the standard_example.cfg file in the [examples](https://github.com/Resume-Tracker/Portfolio-Tracker/tree/master/docs/examples) directory
     2. Then put your domain name in the `server_name` field, change the `root` path setting to point to the directory that you put the built website in save the file with the name of your domain under /etc/nginx/sites-available
     3. Symlink your config file into /etc/nginx/sites-enabled with `ln -s`
 8. Tell the analytics server where it is by adding its domain to the `BASE_NAME` variable in `/app/config.py`.  (For example: `BASE_NAME="analytics.example.com"`)
