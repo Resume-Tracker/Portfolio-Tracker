@@ -169,6 +169,10 @@ def get_pageloads_per_company():
     session.close()
     return jsonify(response_body)
 
+def set_cors(response):
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    response.headers['Access-Control-Request-Method'] = 'GET'
+    return response
 
 @app.route("/read/<rule_id>", methods=["GET"])
 def reached_end_of_page(rule_id):
@@ -181,16 +185,17 @@ def reached_end_of_page(rule_id):
         record = session.query(Pageloads).get(rule_id)
     except Exception as e:
         session.close()
-        return Response(status=500, response="Unknown error occured")
+        response = Response(status=500, response="Unknown error occurred")
+        return set_cors(response)
 
     if record is None:
         session.close()
-        return Response(status=404)
+        return set_cors(Response(status=404))
 
     # if date is already filled, do not update
     if record.page_end is not None:
         session.close()
-        return Response(status=400)
+        return set_cors(Response(status=400))
 
     record.page_end = datetime.utcnow()
     session.add(record)
@@ -204,7 +209,7 @@ def reached_end_of_page(rule_id):
         return Response(status=500)
 
     session.close()
-    return Response(status=200)
+    return set_cors(Response(status=200))
 
 
 @app.route("/login", methods=["POST"])
