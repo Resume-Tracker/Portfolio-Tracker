@@ -22,8 +22,9 @@ class Environ():
     def __init__(self, ip):
         self._ip = ip
     def get(self, var, alt):
-        # HTTP_X_FORWARED_FOR may also work.  But I don't know
         if var == 'HTTP_X_REAL_IP':
+            return self._ip
+        elif var == 'HTTP_X_FORWARDED_FOR':
             return self._ip
         else:
             logger.warn(f'Header `{var}` not found falling back on passthrough')
