@@ -13,9 +13,16 @@ import {
 
 const fetch = require('node-fetch')
 
+/*
+  React component that generates a graph of vistor data with a given encoded start date and enconded end date.
+  parameters:
+  encodedStartDate - Start date that is a string encoded with encodeURIComponent() so that endpoint may properly read the date.
+  encodedEndDate - End date that is a string encoded with encodeURIComponent() so that endpoint may properly read the date.
+*/
 export const Pageloads = ({ encodedStartDate, encodedEndDate }) => {
   const [pageloads, setPageloads] = useState([])
 
+  // Endpoint call to backend to get visitor data with given start date and end date
   useEffect(() => {
     async function fetchPageloads () {
       try {
