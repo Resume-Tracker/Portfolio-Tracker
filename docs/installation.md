@@ -14,7 +14,7 @@ This application probably also runs under Apache but you will have to configure 
 4. Build the website
     1. cd into the website folder
     2. run `npm install`
-    3. run `npm start-script build`
+    3. run `npm run-script build`
 5. Copy the built website to a directory that Nginx has access to (like /var/www/analytics)
     1. Make sure permissions are set so nginx can read them
 6. Configure nginx to forward the API calls to the app server and to serve the frontend
