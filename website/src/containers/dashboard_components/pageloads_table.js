@@ -3,6 +3,14 @@ import Table from 'react-bootstrap/Table'
 
 const fetch = require('node-fetch')
 
+/*
+  React component that generates a table of vistor data when given an encoded start date and enconded end date.
+  Table includes the name of the company that visited the tracked website, if given, along with the percentage of visitors that scrolled to the end.
+  parameters:
+  encodedStartDate - Start date that is a string encoded with encodeURIComponent() so that endpoint may properly read the date.
+  encodedEndDate - End date that is a string encoded with encodeURIComponent() so that endpoint may properly read the date.
+*/
+
 export const PageloadsTable = ({ encodedStartDate, encodedEndDate }) => {
   const [visitsPerCompany, setVisitsPerCompany] = useState([])
 
